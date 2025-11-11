@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legnano Basket Knights - Game Day</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; min-height: 100vh; padding: 20px; }
+.container { max-width: 1200px; margin: 0 auto; }
+.header { text-align: center; padding: 40px; background: #0a0a0a; margin-bottom: 30px; }
+.logo-top { width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(200,16,46,0.8)); display: block; margin: 0 auto 30px; }
+.title-section { background: #c8102e; border-radius: 20px; padding: 30px; border: 3px solid #ffffff; box-shadow: 0 10px 30px rgba(200,16,46,0.5); }
+.header-text h1 { font-size: 2.5em; color: #ffffff; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); margin-bottom: 8px; }
+.header-text .subtitle { font-size: 1.2em; color: #ffffff; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+.admin-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+.admin-btn { background: #c8102e; color: white; border: 2px solid #ffffff; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
+.admin-btn:hover { background: #ffffff; color: #c8102e; }
+.save-btn { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; border: 3px solid #ffffff; padding: 18px 35px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.2em; box-shadow: 0 6px 12px rgba(0,0,0,0.5); display: none; z-index: 1000; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.edit-mode .save-btn { display: block; }
+.save-btn:hover { background: #218838; transform: scale(1.1); }
+.admin-stats { display: none; background: linear-gradient(135deg, #1a1a1a, #2d2d2d); border: 3px solid #c8102e; border-radius: 15px; padding: 25px; margin: 20px 0; box-shadow: 0 8px 16px rgba(200,16,46,0.3); }
+.edit-mode .admin-stats { display: block; }
+.admin-stats h3 { color: #c8102e; margin-bottom: 15px; font-size: 1.5em; }
+.stats-info { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+.stat-box { background: #c8102e; padding: 15px 25px; border-radius: 10px; text-align: center; }
+.stat-box .number { font-size: 2.5em; font-weight: bold; }
+.stat-box .label { font-size: 0.9em; opacity: 0.9; }
+.reset-stats-btn { background: #dc3545; color: white; border: 2px solid #ffffff; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-left: auto; }
+.reset-stats-btn:hover { background: #c82333; }
+.font-selector { display: none; margin: 20px 0; text-align: center; background: #1a1a1a; padding: 15px; border-radius: 10px; border: 2px solid #c8102e; }
+.edit-mode .font-selector { display: block; }
+.font-selector label { color: #ffffff; font-weight: bold; margin-right: 10px; }
+.font-selector select { padding: 10px; border-radius: 5px; border: 2px solid #c8102e; background: #ffffff; color: #1a1a1a; font-size: 16px; font-weight: bold; }
+.export-panel { display: none; background: linear-gradient(135deg, #1a1a1a, #2d2d2d); border: 3px solid #ffd700; border-radius: 15px; padding: 25px; margin: 20px 0; }
+.edit-mode .export-panel { display: block; }
+.export-panel h3 { color: #ffd700; margin-bottom: 15px; }
+.export-panel p { color: #cccccc; margin: 10px 0; line-height: 1.6; }
+.export-btn { background: #ffd700; color: #000; border: 2px solid #000; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; margin: 10px 5px; }
+.export-btn:hover { background: #ffed4e; transform: scale(1.05); }
+.section { background: #c8102e; border-radius: 15px; padding: 35px; margin: 30px 0; box-shadow: 0 8px 16px rgba(200,16,46,0.3); border: 3px solid #ffffff; color: #ffffff; position: relative; }
+.section-alt { background: #1a1a1a; }
+.section-controls { display: none; position: absolute; top: 10px; right: 10px; gap: 5px; z-index: 10; }
+.edit-mode .section-controls { display: flex; }
+.move-btn { background: #ffd700; color: #000; border: 2px solid #000; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1.2em; }
+.move-btn:hover { background: #ffed4e; }
+.color-picker-section { display: none; margin: 15px 0; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 2px dashed #ffffff; }
+.edit-mode .color-picker-section { display: flex; align-items: center; gap: 10px; }
+.color-picker-section label { font-weight: bold; color: #ffffff; }
+.color-picker-section input[type="color"] { width: 60px; height: 40px; border: 2px solid #ffffff; border-radius: 5px; cursor: pointer; }
+.section-title { font-size: 2em; color: #ffffff; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; font-weight: bold; }
+.section-title img { width: 70px; height: 70px; object-fit: contain; }
+.image-input-container { display: none !important; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin: 10px 0; border: 2px dashed #ffffff; }
+.edit-mode .image-input-container { display: flex !important; gap: 10px; align-items: center; flex-wrap: wrap; }
+.image-input-container label { font-weight: bold; color: #ffffff; white-space: nowrap; }
+.image-input-container input { flex: 1; min-width: 200px; padding: 10px; border: 2px solid #ffffff; border-radius: 5px; font-size: 14px; background: #fff; color: #000; }
+.image-input-container button { background: #28a745; color: white; border: 2px solid #ffffff; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+.image-input-container button:hover { background: #218838; transform: scale(1.05); }
+.editable { border: 2px dashed transparent; padding: 5px; border-radius: 5px; transition: all 0.3s; }
+.edit-mode .editable { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); cursor: text; }
+.editable:focus { outline: none; background: rgba(255, 215, 0, 0.2); }
+.match-sponsor-section { background: #ffffff; color: #1a1a1a; border: 3px solid #c8102e; text-align: center; }
+.match-sponsor-section.hidden { display: none; }
+.match-sponsor-section .section-title { color: #c8102e; }
+.match-sponsor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-top: 25px; }
+.match-sponsor-card { background: rgba(200,16,46,0.1); padding: 25px; border-radius: 12px; text-align: center; border: 3px solid #c8102e; }
+.match-sponsor-card h3, .match-sponsor-card p { color: #1a1a1a; }
+.match-sponsor-logo { width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px; transition: transform 0.3s; }
+.match-sponsor-logo:hover { transform: scale(1.1); }
+.toggle-section-btn { background: #ffd700; color: #000; border: 2px solid #000; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: all 0.3s; }
+.toggle-section-btn:hover { background: #ffed4e; transform: scale(1.05); }
+.game-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+.game-detail { background: #ffffff; padding: 15px; border-radius: 12px; border: 2px solid #000000; text-align: center; }
+.game-detail h3 { color: #c8102e; margin-bottom: 8px; font-size: 1em; }
+.game-detail p { font-size: 1.1em; font-weight: bold; color: #1a1a1a; }
+.opponent-box { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; grid-column: span 2; }
+.opponent-logo { width: 50px; height: 50px; object-fit: contain; }
+.program-section { background: #ffffff; color: #1a1a1a; border: 3px solid #c8102e; }
+.program-section .section-title { color: #c8102e; }
+.program-timeline { margin-top: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+.program-item { display: flex; flex-direction: column; gap: 10px; padding: 20px; background: linear-gradient(135deg, #c8102e 0%, #a00d25 100%); border-radius: 12px; border: 3px solid #000000; box-shadow: 0 4px 8px rgba(0,0,0,0.2); color: #ffffff; transition: transform 0.3s; }
+.program-item:hover { transform: translateY(-5px); }
+.program-time { font-size: 1.5em; font-weight: bold; color: #ffffff !important; text-align: center; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 8px; }
+.program-content { text-align: center; }
+.program-content h4 { font-size: 1.3em; color: #ffffff; margin-bottom: 8px; }
+.program-content p { color: #ffffff; font-size: 0.95em; opacity: 0.9; }
+.curiosity-section { background: #ffd700; color: #1a1a1a; border: 3px solid #000000; min-height: 200px; }
+.curiosity-section .section-title { color: #1a1a1a; }
+.curiosity-content { line-height: 1.8; font-size: 1.1em; min-height: 100px; padding: 10px; }
+.roster-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+.player-card { background: rgba(255,255,255,0.95); border-radius: 12px; padding: 15px; display: flex; gap: 15px; align-items: center; border: 3px solid #ffffff; }
+.player-card-no-img { background: rgba(255,255,255,0.95); border-radius: 12px; padding: 20px; border: 3px solid #ffffff; text-align: center; }
+.opponent-roster-section .player-card-no-img { background: rgba(255,255,255,0.15); color: #ffffff; }
+.opponent-roster-section .player-name { color: #ffffff; }
+.opponent-roster-section .player-details { color: #ffffff; }
+.player-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 4px solid #ffffff; flex-shrink: 0; }
+.player-info { flex: 1; }
+.player-name { font-size: 1.2em; font-weight: bold; margin-bottom: 5px; color: #1a1a1a; }
+.player-details { font-size: 0.95em; color: #333; }
+.coach-card { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; margin-top: 20px; border: 3px solid #ffffff; color: #ffffff; font-size: 1.1em; text-align: center; }
+.add-remove-btns { display: none; gap: 10px; margin-top: 20px; justify-content: center; }
+.edit-mode .add-remove-btns { display: flex; }
+.btn { background: #c8102e; color: white; border: 2px solid #ffffff; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.btn:hover { background: #ffffff; color: #c8102e; }
+.btn-add { background: #28a745; }
+.btn-add:hover { background: #ffffff; color: #28a745; }
+.standings-table { width: 100%; border-collapse: collapse; margin-top: 25px; font-size: 0.95em; }
+.standings-table th, .standings-table td { padding: 12px 8px; text-align: left; border-bottom: 2px solid #c8102e; }
+.standings-table th { background: #c8102e; color: white; font-weight: bold; }
+.team-cell { display: flex; align-items: center; gap: 10px; }
+.team-logo { width: 30px; height: 30px; object-fit: contain; }
+.playlist-section { background: #1DB954; }
+.spotify-link { display: inline-block; background: #ffffff; color: #1DB954; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-size: 1.3em; font-weight: bold; margin-top: 20px; transition: all 0.3s; border: 3px solid #000000; }
+.spotify-link:hover { background: #000000; color: #ffffff; transform: scale(1.05); }
+.sponsors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-top: 25px; }
+.sponsor-card { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 12px; text-align: center; border: 3px solid #ffffff; }
+.sponsor-card h3, .sponsor-card p { color: #1a1a1a; }
+.sponsor-logo { width: 100px; height: 100px; object-fit: contain; }
+.social-links { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 25px; }
+.social-item { display: flex; flex-direction: column; align-items: center; }
+.social-btn { padding: 15px 30px; border-radius: 50px; text-decoration: none; color: white; font-weight: bold; transition: all 0.3s; border: 3px solid #000000; }
+.social-btn:hover { transform: scale(1.1); }
+.social-input-container { display: none !important; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-top: 8px; border: 2px dashed #ffffff; }
+.edit-mode .social-input-container { display: flex !important; gap: 10px; align-items: center; }
+.social-input-container input { flex: 1; padding: 8px; border: 2px solid #ffffff; border-radius: 5px; background: #fff; color: #000; }
+.social-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+.social-facebook { background: #1877f2; }
+.social-youtube { background: #ff0000; }
+.social-x { background: #000000; }
+.social-linkedin { background: #0077b5; }
+.social-website { background: #c8102e; }
+.footer { text-align: center; padding: 40px; margin-top: 50px; border-top: 3px solid #c8102e; }
+.footer p { font-size: 1.1em; color: #cccccc; margin: 5px 0; }
+.footer strong { color: #c8102e; font-size: 1.3em; }
+.password-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
+.password-modal.active { display: flex; }
+.password-box { background: #ffffff; padding: 40px; border-radius: 15px; border: 3px solid #c8102e; text-align: center; color: #1a1a1a; }
+.password-box input { padding: 15px; margin: 20px 0; border-radius: 5px; border: 2px solid #c8102e; background: #f8f8f8; color: #1a1a1a; font-size: 16px; width: 250px; }
+@media (max-width: 768px) { .header-text h1 { font-size: 1.5em; } .logo-top { width: 100px; height: 100px; } .section { padding: 20px; } .roster-container, .game-info, .program-timeline { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="password-modal" id="passwordModal">
+<div class="password-box">
+<h2>🔒 Accesso Admin</h2>
+<p>Inserisci la password per modificare la pagina</p>
+<input type="password" id="passwordInput" placeholder="Password">
+<br>
+<button class="btn" onclick="checkPassword()">Accedi</button>
+<button class="btn" onclick="closePasswordModal()">Annulla</button>
+</div>
+</div>
+<div class="admin-toggle"><button class="admin-btn" onclick="toggleAdmin()">👤 Modalità Admin</button></div>
+<button class="save-btn" onclick="saveAllData()">💾 SALVA TUTTO</button>
+<div class="container">
+<img class="logo-top" id="mainLogo" src="https://via.placeholder.com/150/c8102e/ffffff?text=LOGO">
+<div class="image-input-container">
+<label>🖼️ Logo Principale:</label>
+<input type="text" id="mainLogoInput" placeholder="Incolla qui l'URL del logo">
+<button onclick="updateImage('mainLogo', 'mainLogoInput')">Aggiorna</button>
+</div>
+
+<div class="admin-stats">
+<h3>📊 Statistiche Accessi</h3>
+<div class="stats-info">
+<div class="stat-box">
+<div class="number" id="visitCount">0</div>
+<div class="label">Visite Totali</div>
+</div>
+<button class="reset-stats-btn" onclick="resetStats()">🔄 Reset Contatore</button>
+</div>
+</div>
+
+<div class="export-panel">
+<h3>📤 SISTEMA AGGIORNAMENTO NETLIFY</h3>
+<p><strong>🎯 COME FUNZIONA:</strong></p>
+<p>1. Fai tutte le modifiche che vuoi (immagini, testi, colori)</p>
+<p>2. Clicca "SCARICA HTML AGGIORNATO" qui sotto</p>
+<p>3. Vai su GitHub → Apri il file index.html → Clicca "Edit" (matita)</p>
+<p>4. Cancella tutto e incolla il nuovo codice</p>
+<p>5. Clicca "Commit changes" → Netlify si aggiorna automaticamente!</p>
+<p><strong>✨ Gli smartphone vedranno le modifiche in 30 secondi!</strong></p>
+<button class="export-btn" onclick="downloadHTML()">💾 SCARICA HTML AGGIORNATO</button>
+</div>
+
+<div class="font-selector">
+<label>🎨 Scegli il font: </label>
+<select id="fontSelect" onchange="changeFont()">
+<option value="Arial">Arial</option>
+<option value="Georgia">Georgia</option>
+<option value="Verdana">Verdana</option>
+<option value="Courier New">Courier New</option>
+<option value="Times New Roman">Times New Roman</option>
+<option value="Impact">Impact</option>
+</select>
+</div>
+<div class="header">
+<div class="title-section">
+<div class="header-text">
+<h1 class="editable" contenteditable="false">🏀 LEGNANO BASKET KNIGHTS</h1>
+<div class="subtitle editable" contenteditable="false">⚡ GAME DAY EXPERIENCE ⚡</div>
+</div>
+</div>
+</div>
+<div id="sectionsContainer">
+<div class="section match-sponsor-section" id="matchSponsorSection">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#ffffff" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title editable" contenteditable="false">🤝 Match Sponsor</h2>
+<div class="match-sponsor-grid" id="matchSponsorGrid">
+<div class="match-sponsor-card">
+<img class="match-sponsor-logo" id="matchSponsor0Logo" src="https://via.placeholder.com/120/c8102e/ffffff?text=SPONSOR1">
+<div class="image-input-container" style="display: block;">
+<input type="text" id="matchSponsor0LogoInput" placeholder="URL logo sponsor" style="width: 100%;">
+<button onclick="updateImage('matchSponsor0Logo', 'matchSponsor0LogoInput')">✓</button>
+</div>
+<h3 class="editable" contenteditable="false">Sponsor 1</h3>
+<p class="editable" contenteditable="false">Match Sponsor</p>
+</div>
+<div class="match-sponsor-card">
+<img class="match-sponsor-logo" id="matchSponsor1Logo" src="https://via.placeholder.com/120/0000ff/ffffff?text=SPONSOR2">
+<div class="image-input-container" style="display: block;">
+<input type="text" id="matchSponsor1LogoInput" placeholder="URL logo sponsor" style="width: 100%;">
+<button onclick="updateImage('matchSponsor1Logo', 'matchSponsor1LogoInput')">✓</button>
+</div>
+<h3 class="editable" contenteditable="false">Sponsor 2</h3>
+<p class="editable" contenteditable="false">Match Sponsor</p>
+</div>
+</div>
+<div class="add-remove-btns">
+<button class="btn btn-add" onclick="addMatchSponsor()">➕ Aggiungi</button>
+<button class="btn" onclick="removeMatchSponsor()">➖ Rimuovi</button>
+<button class="toggle-section-btn" onclick="toggleMatchSponsor()">👁️ NASCONDI SEZIONE</button>
+</div>
+</div>
+<div class="section next-game">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#c8102e" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title editable" contenteditable="false">⏰ Prossima Partita</h2>
+<div class="game-info">
+<div class="game-detail">
+<h3>📅 Data e Orario</h3>
+<p class="editable" contenteditable="false">Sabato 2 Novembre 2025</p>
+<p class="editable" contenteditable="false" style="margin-top: 5px;">ore 20:30</p>
+</div>
+<div class="game-detail">
+<h3>🏟️ Luogo</h3>
+<p class="editable" contenteditable="false">PalaBorsani<br>Castellanza</p>
+</div>
+<div class="game-detail opponent-box">
+<h3>🆚 Avversario</h3>
+<img class="opponent-logo" id="opponentLogo" src="https://via.placeholder.com/50/0000ff/ffffff?text=OPP">
+<p class="editable" contenteditable="false">Virtus Bologna</p>
+</div>
+</div>
+<div class="image-input-container">
+<label>🖼️ Logo Avversario:</label>
+<input type="text" id="opponentLogoInput" placeholder="Incolla qui l'URL">
+<button onclick="updateImage('opponentLogo', 'opponentLogoInput')">Aggiorna</button>
+</div>
+</div>
+<div class="section program-section">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#ffffff" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title editable" contenteditable="false">🗓️ Programma Game Day</h2>
+<div class="program-timeline" id="programTimeline">
+<div class="program-item"><div class="program-time editable" contenteditable="false">18:00</div><div class="program-content"><h4 class="editable" contenteditable="false">🚪 Apertura Porte</h4><p class="editable" contenteditable="false">Inizio accoglienza pubblico</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="false">19:30</div><div class="program-content"><h4 class="editable" contenteditable="false">🏀 Riscaldamento</h4><p class="editable" contenteditable="false">Le squadre in campo</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="false">20:20</div><div class="program-content"><h4 class="editable" contenteditable="false">🎤 Presentazione</h4><p class="editable" contenteditable="false">Ingresso giocatori</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="false">20:30</div><div class="program-content"><h4 class="editable" contenteditable="false">🏁 Palla a Due</h4><p class="editable" contenteditable="false">Inizio partita!</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="false">21:15</div><div class="program-content"><h4 class="editable" contenteditable="false">🎭 Intervallo</h4><p class="editable" contenteditable="false">Show e intrattenimento</p></div></div>
+</div>
+<div class="add-remove-btns">
+<button class="btn btn-add" onclick="addProgramItem()">➕ Aggiungi</button>
+<button class="btn" onclick="removeProgramItem()">➖ Rimuovi</button>
+</div>
+</div>
+<div class="section curiosity-section">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement,'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#ffd700" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title editable" contenteditable="false">💡 Curiosità della Partita</h2>
+<div class="curiosity-content editable" contenteditable="false">Questa sarà la terza volta che affrontiamo la Virtus Bologna! 🔥 La nostra squadra ha vinto l'ultimo incontro con un punteggio di 85-78 grazie a una performance straordinaria di Marco Rossi che ha segnato 28 punti!</div>
+</div>
+<div class="section">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#c8102e" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title"><img id="knightsRosterLogo" src="https://via.placeholder.com/70/c8102e/ffffff?text=LBK"><span class="editable" contenteditable="false">👥 Roster Knights</span></h2>
+<div class="image-input-container">
+<label>🖼️ Logo:</label>
+<input type="text" id="knightsRosterLogoInput" placeholder="URL">
+<button onclick="updateImage('knightsRosterLogo', 'knightsRosterLogoInput')">✓</button>
+</div>
+<div class="roster-container" id="knightsRoster">
+<div class="player-card">
+<img class="player-img" id="knightsPlayer0Img" src="https://via.placeholder.com/80/c8102e/ffffff?text=P1">
+<div class="player-info">
+<div class="image-input-container" style="display: block; width: 100%; margin-bottom: 10px;">
+<input type="text" id="knightsPlayer0ImgInput" placeholder="URL foto" style="width: 100%;">
+<button onclick="updateImage('knightsPlayer0Img', 'knightsPlayer0ImgInput')">✓</button>
+</div>
+<div class="player-name editable" contenteditable="false">Marco Rossi</div>
+<div class="player-details"><span class="editable" contenteditable="false">Guardia</span> | <span class="editable" contenteditable="false">192 cm</span> | <span class="editable" contenteditable="false">25 anni</span></div>
+</div>
+</div>
+</div>
+<div class="coach-card"><strong>🎯 Allenatore:</strong> <span class="editable" contenteditable="false">Coach Giovanni Neri</span></div>
+<div class="add-remove-btns">
+<button class="btn btn-add" onclick="addPlayer('knights')">➕ Aggiungi</button>
+<button class="btn" onclick="removePlayer('knights')">➖ Rimuovi</button>
+</div>
+</div>
+
+<div class="section opponent-roster-section" id="opponentRosterSection">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#0000ff" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title"><img id="opponentRosterLogo" src="https://via.placeholder.com/70/0000ff/ffffff?text=OPP"><span class="editable" contenteditable="false">👥 Roster Avversari</span></h2>
+<div class="image-input-container">
+<label>🖼️ Logo:</label>
+<input type="text" id="opponentRosterLogoInput" placeholder="URL">
+<button onclick="updateImage('opponentRosterLogo', 'opponentRosterLogoInput')">✓</button>
+</div>
+<div class="roster-container" id="opponentRoster">
+<div class="player-card-no-img">
+<div class="player-name editable" contenteditable="false">Paolo Neri</div>
+<div class="player-details"><span class="editable" contenteditable="false">Playmaker</span> | <span class="editable" contenteditable="false">185 cm</span> | <span class="editable" contenteditable="false">27 anni</span></div>
+</div>
+</div>
+<div class="coach-card"><strong>🎯 Allenatore:</strong> <span class="editable" contenteditable="false">Coach Roberto Belli</span></div>
+<div class="add-remove-btns">
+<button class="btn btn-add" onclick="addPlayer('opponent')">➕ Aggiungi</button>
+<button class="btn" onclick="removePlayer('opponent')">➖ Rimuovi</button>
+</div>
+</div>
+
+<div class="section section-alt">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#1a1a1a" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title"><img id="leagueLogo" src="https://via.placeholder.com/70/ffffff/000000?text=LEGA"><span class="editable" contenteditable="false">📊 Classifica</span></h2>
+<div class="image-input-container">
+<label>🖼️ Logo:</label>
+<input type="text" id="leagueLogoInput" placeholder="URL">
+<button onclick="updateImage('leagueLogo', 'leagueLogoInput')">✓</button>
+</div>
+<table class="standings-table">
+<thead><tr><th>#</th><th>Squadra</th><th>PG</th><th>V</th><th>P</th><th>PT</th></tr></thead>
+<tbody id="standingsBody">
+<tr>
+<td>1</td>
+<td>
+<div class="team-cell">
+<img class="team-logo" id="teamLogo0" src="https://via.placeholder.com/30/c8102e/ffffff?text=1">
+<span class="editable" contenteditable="false">Legnano Knights</span>
+</div>
+<div class="image-input-container" style="display: block; margin-top: 5px;">
+<input type="text" id="teamLogo0Input" placeholder="URL logo" style="width: 100%;">
+<button onclick="updateImage('teamLogo0', 'teamLogo0Input')">✓</button>
+</div>
+</td>
+<td class="editable" contenteditable="false">10</td>
+<td class="editable" contenteditable="false">8</td>
+<td class="editable" contenteditable="false">2</td>
+<td class="editable" contenteditable="false">18</td>
+</tr>
+</tbody>
+</table>
+<div class="add-remove-btns">
+<button class="btn btn-add" onclick="addStandingRow()">➕ Aggiungi</button>
+<button class="btn" onclick="removeStandingRow()">➖ Rimuovi</button>
+</div>
+</div>
+<div class="section playlist-section">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#1DB954" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title editable" contenteditable="false">🎵 Playlist Pre-Partita</h2>
+<p class="editable" contenteditable="false">Ascolta la playlist ufficiale! 🔥</p>
+<a href="https://open.spotify.com/playlist/esempio" id="spotifyLink" class="spotify-link" target="_blank">🎧 Ascolta su Spotify</a>
+<div class="image-input-container">
+<label>🔗 Link Spotify:</label>
+<input type="text" id="spotifyLinkInput" placeholder="Link playlist">
+<button onclick="updateLink('spotifyLink', 'spotifyLinkInput')">✓</button>
+</div>
+</div>
+<div class="section">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#c8102e" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title editable" contenteditable="false">🤝 I Nostri Sponsor</h2>
+<div class="sponsors-grid" id="sponsorsGrid">
+<div class="sponsor-card">
+<img class="sponsor-logo" id="sponsor0Logo" src="https://via.placeholder.com/100/c8102e/ffffff?text=LOGO1">
+<div class="image-input-container" style="display: block;">
+<input type="text" id="sponsor0LogoInput" placeholder="URL logo" style="width: 100%;">
+<button onclick="updateImage('sponsor0Logo', 'sponsor0LogoInput')">✓</button>
+</div>
+<h3 class="editable" contenteditable="false">Sponsor 1</h3>
+<p class="editable" contenteditable="false">Partner Principale</p>
+</div>
+</div>
+<div class="add-remove-btns">
+<button class="btn btn-add" onclick="addSponsor()">➕ Aggiungi</button>
+<button class="btn" onclick="removeSponsor()">➖ Rimuovi</button>
+</div>
+</div>
+<div class="section section-alt">
+<div class="section-controls">
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'up')">⬆</button>
+<button class="move-btn" onclick="moveSection(this.parentElement.parentElement, 'down')">⬇</button>
+</div>
+<div class="color-picker-section">
+<label>🎨 Colore Sfondo:</label>
+<input type="color" value="#1a1a1a" onchange="changeSectionColor(this)">
+</div>
+<h2 class="section-title editable" contenteditable="false">🌐 Seguici sui Social</h2>
+<div class="social-links">
+<div class="social-item">
+<a href="https://instagram.com/legnanoknights" id="socialInstagram" class="social-btn social-instagram" target="_blank">📷 Instagram</a>
+<div class="social-input-container">
+<input type="text" id="socialInstagramInput" placeholder="Link">
+<button class="btn" onclick="updateLink('socialInstagram', 'socialInstagramInput')">✓</button>
+</div>
+</div>
+<div class="social-item">
+<a href="https://facebook.com/legnanoknights" id="socialFacebook" class="social-btn social-facebook" target="_blank">👍 Facebook</a>
+<div class="social-input-container">
+<input type="text" id="socialFacebookInput" placeholder="Link">
+<button class="btn" onclick="updateLink('socialFacebook', 'socialFacebookInput')">✓</button>
+</div>
+</div>
+<div class="social-item">
+<a href="https://youtube.com/legnanoknights" id="socialYoutube" class="social-btn social-youtube" target="_blank">📺 YouTube</a>
+<div class="social-input-container">
+<input type="text" id="socialYoutubeInput" placeholder="Link">
+<button class="btn" onclick="updateLink('socialYoutube', 'socialYoutubeInput')">✓</button>
+</div>
+</div>
+<div class="social-item">
+<a href="https://x.com/legnanoknights" id="socialX" class="social-btn social-x" target="_blank">✖️ X</a>
+<div class="social-input-container">
+<input type="text" id="socialXInput" placeholder="Link">
+<button class="btn" onclick="updateLink('socialX', 'socialXInput')">✓</button>
+</div>
+</div>
+<div class="social-item">
+<a href="https://linkedin.com/company/legnanoknights" id="socialLinkedin" class="social-btn social-linkedin" target="_blank">💼 LinkedIn</a>
+<div class="social-input-container">
+<input type="text" id="socialLinkedinInput" placeholder="Link">
+<button class="btn" onclick="updateLink('socialLinkedin', 'socialLinkedinInput')">✓</button>
+</div>
+</div>
+<div class="social-item">
+<a href="https://legnanoknights.it" id="socialWebsite" class="social-btn social-website" target="_blank">🌐 Sito Web</a>
+<div class="social-input-container">
+<input type="text" id="socialWebsiteInput" placeholder="Link">
+<button class="btn" onclick="updateLink('socialWebsite', 'socialWebsiteInput')">✓</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<p><strong class="editable" contenteditable="false">Realizzato con ❤️ da Legnano Basket Knights</strong></p>
+<p class="editable" contenteditable="false">🏀 Vivi l'emozione del Game Day 🏀</p>
+</div>
+</div>
+<script>
+let isAdmin = false;
+const ADMIN_PASSWORD = 'knights2025';
+let knightsPlayerCount = 1;
+let opponentPlayerCount = 1;
+let sponsorCount = 1;
+let matchSponsorCount = 2;
+let teamCount = 1;
+let programItemCount = 5;
+let pageData = { visits: 0 };
+
+function initVisits() {
+const stored = localStorage.getItem('knightsPageVisits');
+if (stored) {
+pageData = JSON.parse(stored);
+}
+pageData.visits++;
+localStorage.setItem('knightsPageVisits', JSON.stringify(pageData));
+updateVisitDisplay();
+}
+
+function updateVisitDisplay() {
+document.getElementById('visitCount').textContent = pageData.visits;
+}
+
+function resetStats() {
+if (confirm('⚠️ Sei sicuro di voler resettare il contatore delle visite?')) {
+pageData.visits = 0;
+localStorage.setItem('knightsPageVisits', JSON.stringify(pageData));
+updateVisitDisplay();
+alert('✅ Contatore resettato!');
+}
+}
+
+function toggleAdmin() {
+if (!isAdmin) {
+document.getElementById('passwordModal').classList.add('active');
+} else {
+isAdmin = false;
+document.body.classList.remove('edit-mode');
+disableEditing();
+}
+}
+
+function closePasswordModal() {
+document.getElementById('passwordModal').classList.remove('active');
+}
+
+function checkPassword() {
+const password = document.getElementById('passwordInput').value;
+if (password === ADMIN_PASSWORD) {
+isAdmin = true;
+document.body.classList.add('edit-mode');
+enableEditing();
+closePasswordModal();
+document.getElementById('passwordInput').value = '';
+alert('✅ Accesso admin attivato!');
+} else {
+alert('❌ Password errata!');
+}
+}
+
+function enableEditing() {
+document.querySelectorAll('.editable').forEach(el => {
+el.setAttribute('contenteditable', 'true');
+});
+}
+
+function disableEditing() {
+document.querySelectorAll('.editable').forEach(el => {
+el.setAttribute('contenteditable', 'false');
+});
+}
+
+function updateImage(imgId, inputId) {
+const img = document.getElementById(imgId);
+const input = document.getElementById(inputId);
+const url = input.value.trim();
+if (url) {
+img.src = url;
+input.value = '';
+alert('✅ Immagine aggiornata!');
+} else {
+alert('⚠️ Inserisci un URL valido!');
+}
+}
+
+function updateLink(linkId, inputId) {
+const link = document.getElementById(linkId);
+const input = document.getElementById(inputId);
+const url = input.value.trim();
+if (url) {
+link.setAttribute('href', url);
+input.value = '';
+alert('✅ Link aggiornato!');
+} else {
+alert('⚠️ Inserisci un URL valido!');
+}
+}
+
+function changeFont() {
+const font = document.getElementById('fontSelect').value;
+document.body.style.fontFamily = font;
+}
+
+function changeSectionColor(input) {
+const section = input.closest('.section');
+section.style.background = input.value;
+}
+
+function moveSection(section, direction) {
+const container = document.getElementById('sectionsContainer');
+const sections = Array.from(container.children);
+const currentIndex = sections.indexOf(section);
+if (direction === 'up' && currentIndex > 0) {
+container.insertBefore(section, sections[currentIndex - 1]);
+} else if (direction === 'down' && currentIndex < sections.length - 1) {
+container.insertBefore(sections[currentIndex + 1], section);
+}
+}
+
+function addPlayer(team) {
+const roster = document.getElementById(team + 'Roster');
+const newCard = document.createElement('div');
+if (team === 'knights') {
+const index = knightsPlayerCount;
+newCard.className = 'player-card';
+newCard.innerHTML = `
+<img class="player-img" id="knightsPlayer${index}Img" src="https://via.placeholder.com/80/c8102e/ffffff?text=NEW">
+<div class="player-info">
+<div class="image-input-container" style="display: block; width: 100%; margin-bottom: 10px;">
+<input type="text" id="knightsPlayer${index}ImgInput" placeholder="URL foto" style="width: 100%;">
+<button onclick="updateImage('knightsPlayer${index}Img', 'knightsPlayer${index}ImgInput')">✓</button>
+</div>
+<div class="player-name editable" contenteditable="true">Nuovo Giocatore</div>
+<div class="player-details"><span class="editable" contenteditable="true">Ruolo</span> | <span class="editable" contenteditable="true">190 cm</span> | <span class="editable" contenteditable="true">25 anni</span></div>
+</div>`;
+knightsPlayerCount++;
+} else {
+newCard.className = 'player-card-no-img';
+newCard.innerHTML = `
+<div class="player-name editable" contenteditable="true">Nuovo Giocatore</div>
+<div class="player-details"><span class="editable" contenteditable="true">Ruolo</span> | <span class="editable" contenteditable="true">190 cm</span> | <span class="editable" contenteditable="true">25 anni</span></div>`;
+opponentPlayerCount++;
+}
+roster.appendChild(newCard);
+}
+
+function removePlayer(team) {
+const roster = document.getElementById(team + 'Roster');
+const cards = roster.querySelectorAll(team === 'knights' ? '.player-card' : '.player-card-no-img');
+if (cards.length > 0) {
+roster.removeChild(cards[cards.length - 1]);
+if (team === 'knights') knightsPlayerCount--;
+else opponentPlayerCount--;
+}
+}
+
+function addProgramItem() {
+const timeline = document.getElementById('programTimeline');
+const newItem = document.createElement('div');
+newItem.className = 'program-item';
+newItem.innerHTML = `
+<div class="program-time editable" contenteditable="true">22:00</div>
+<div class="program-content">
+<h4 class="editable" contenteditable="true">🎉 Nuovo Evento</h4>
+<p class="editable" contenteditable="true">Descrizione evento</p>
+</div>`;
+timeline.appendChild(newItem);
+programItemCount++;
+}
+
+function removeProgramItem() {
+const timeline = document.getElementById('programTimeline');
+const items = timeline.querySelectorAll('.program-item');
+if (items.length > 1) {
+timeline.removeChild(items[items.length - 1]);
+programItemCount--;
+}
+}
+
+function addStandingRow() {
+const tbody = document.getElementById('standingsBody');
+const index = teamCount;
+const currentRows = tbody.querySelectorAll('tr').length;
+const newRow = document.createElement('tr');
+newRow.innerHTML = `
+<td>${currentRows + 1}</td>
+<td>
+<div class="team-cell">
+<img class="team-logo" id="teamLogo${index}" src="https://via.placeholder.com/30?text=${index+1}">
+<span class="editable" contenteditable="${isAdmin}">Nuova Squadra</span>
+</div>
+<div class="image-input-container" style="display: block; margin-top: 5px;">
+<input type="text" id="teamLogo${index}Input" placeholder="URL logo" style="width: 100%;">
+<button onclick="updateImage('teamLogo${index}', 'teamLogo${index}Input')">✓</button>
+</div>
+</td>
+<td class="editable" contenteditable="${isAdmin}">0</td>
+<td class="editable" contenteditable="${isAdmin}">0</td>
+<td class="editable" contenteditable="${isAdmin}">0</td>
+<td class="editable" contenteditable="${isAdmin}">0</td>`;
+tbody.appendChild(newRow);
+teamCount++;
+}
+
+function removeStandingRow() {
+const tbody = document.getElementById('standingsBody');
+const rows = tbody.querySelectorAll('tr');
+if (rows.length > 1) {
+tbody.removeChild(rows[rows.length - 1]);
+teamCount--;
+}
+}
+
+function addSponsor() {
+const grid = document.getElementById('sponsorsGrid');
+const index = sponsorCount;
+const newSponsor = document.createElement('div');
+newSponsor.className = 'sponsor-card';
+newSponsor.innerHTML = `
+<img class="sponsor-logo" id="sponsor${index}Logo" src="https://via.placeholder.com/100?text=NEW">
+<div class="image-input-container" style="display: block;">
+<input type="text" id="sponsor${index}LogoInput" placeholder="URL logo" style="width: 100%;">
+<button onclick="updateImage('sponsor${index}Logo', 'sponsor${index}LogoInput')">✓</button>
+</div>
+<h3 class="editable" contenteditable="${isAdmin}">Nuovo Sponsor</h3>
+<p class="editable" contenteditable="${isAdmin}">Descrizione</p>`;
+grid.appendChild(newSponsor);
+sponsorCount++;
+}
+
+function removeSponsor() {
+const grid = document.getElementById('sponsorsGrid');
+const sponsors = grid.querySelectorAll('.sponsor-card');
+if (sponsors.length > 0) {
+grid.removeChild(sponsors[sponsors.length - 1]);
+sponsorCount--;
+}
+}
+
+function addMatchSponsor() {
+const grid = document.getElementById('matchSponsorGrid');
+const index = matchSponsorCount;
+const newSponsor = document.createElement('div');
+newSponsor.className = 'match-sponsor-card';
+newSponsor.innerHTML = `
+<img class="match-sponsor-logo" id="matchSponsor${index}Logo" src="https://via.placeholder.com/120?text=NEW">
+<div class="image-input-container" style="display: block;">
+<input type="text" id="matchSponsor${index}LogoInput" placeholder="URL logo" style="width: 100%;">
+<button onclick="updateImage('matchSponsor${index}Logo', 'matchSponsor${index}LogoInput')">✓</button>
+</div>
+<h3 class="editable" contenteditable="${isAdmin}">Nuovo Sponsor</h3>
+<p class="editable" contenteditable="${isAdmin}">Match Sponsor</p>`;
+grid.appendChild(newSponsor);
+matchSponsorCount++;
+}
+
+function removeMatchSponsor() {
+const grid = document.getElementById('matchSponsorGrid');
+const sponsors = grid.querySelectorAll('.match-sponsor-card');
+if (sponsors.length > 1) {
+grid.removeChild(sponsors[sponsors.length - 1]);
+matchSponsorCount--;
+}
+}
+
+function toggleMatchSponsor() {
+const section = document.getElementById('matchSponsorSection');
+const btn = event.target;
+if (section.classList.contains('hidden')) {
+section.classList.remove('hidden');
+btn.textContent = '👁️ NASCONDI SEZIONE';
+} else {
+section.classList.add('hidden');
+btn.textContent = '👁️ MOSTRA SEZIONE';
+}
+}
+
+function saveAllData() {
+alert('✅ Modifiche pronte per essere esportate!\n\nAdesso clicca "SCARICA HTML AGGIORNATO" nel pannello sopra.');
+}
+
+function downloadHTML() {
+const htmlContent = document.documentElement.outerHTML;
+const blob = new Blob([htmlContent], { type: 'text/html' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'index.html';
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+alert('✅ FILE SCARICATO!\n\n📋 PROSSIMI PASSI:\n1. Vai su GitHub\n2. Apri il file index.html\n3. Clicca Edit (icona matita)\n4. Cancella tutto\n5. Incolla il nuovo codice\n6. Clicca "Commit changes"\n7. Netlify si aggiorna in 30 secondi!');
+}
+
+document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+checkPassword();
+}
+});
+
+window.onload = function() {
+initVisits();
+};
+</script>
+</body>
+</html>
