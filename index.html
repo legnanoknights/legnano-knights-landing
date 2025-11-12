@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
+<html lang="it"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Legnano Basket Knights - Game Day</title>
@@ -140,7 +138,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 @media (max-width: 768px) { .header-text h1 { font-size: 1.5em; } .logo-top { width: 100px; height: 100px; } .section { padding: 20px; } .roster-container, .game-info, .program-timeline { grid-template-columns: 1fr; } }
 </style>
 </head>
-<body>
+<body class="edit-mode">
 <div class="password-modal" id="passwordModal">
 <div class="password-box">
 <h2>🔒 Accesso Admin</h2>
@@ -154,7 +152,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <div class="admin-toggle"><button class="admin-btn" onclick="toggleAdmin()">👤 Modalità Admin</button></div>
 <button class="save-btn" onclick="saveAllData()">💾 SALVA TUTTO</button>
 <div class="container">
-<img class="logo-top" id="mainLogo" src="https://via.placeholder.com/150/c8102e/ffffff?text=LOGO">
+<img class="logo-top" id="mainLogo" src="https://upload.wikimedia.org/wikipedia/it/c/c0/Legnano_Basket_Knights_Logo.png">
 <div class="image-input-container">
 <label>🖼️ Logo Principale:</label>
 <input type="text" id="mainLogoInput" placeholder="Incolla qui l'URL del logo">
@@ -165,7 +163,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <h3>📊 Statistiche Accessi</h3>
 <div class="stats-info">
 <div class="stat-box">
-<div class="number" id="visitCount">0</div>
+<div class="number" id="visitCount">1</div>
 <div class="label">Visite Totali</div>
 </div>
 <button class="reset-stats-btn" onclick="resetStats()">🔄 Reset Contatore</button>
@@ -198,8 +196,8 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <div class="header">
 <div class="title-section">
 <div class="header-text">
-<h1 class="editable" contenteditable="false">🏀 LEGNANO BASKET KNIGHTS</h1>
-<div class="subtitle editable" contenteditable="false">⚡ GAME DAY EXPERIENCE ⚡</div>
+<h1 class="editable" contenteditable="true">🏀 LEGNANO BASKET KNIGHTS</h1>
+<div class="subtitle editable" contenteditable="true">⚡ GAME DAY EXPERIENCE ⚡</div>
 </div>
 </div>
 </div>
@@ -213,7 +211,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#ffffff" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title editable" contenteditable="false">🤝 Match Sponsor</h2>
+<h2 class="section-title editable" contenteditable="true">🤝 Match Sponsor</h2>
 <div class="match-sponsor-grid" id="matchSponsorGrid">
 <div class="match-sponsor-card">
 <img class="match-sponsor-logo" id="matchSponsor0Logo" src="https://via.placeholder.com/120/c8102e/ffffff?text=SPONSOR1">
@@ -221,8 +219,8 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <input type="text" id="matchSponsor0LogoInput" placeholder="URL logo sponsor" style="width: 100%;">
 <button onclick="updateImage('matchSponsor0Logo', 'matchSponsor0LogoInput')">✓</button>
 </div>
-<h3 class="editable" contenteditable="false">Sponsor 1</h3>
-<p class="editable" contenteditable="false">Match Sponsor</p>
+<h3 class="editable" contenteditable="true">Sponsor 1</h3>
+<p class="editable" contenteditable="true">Match Sponsor</p>
 </div>
 <div class="match-sponsor-card">
 <img class="match-sponsor-logo" id="matchSponsor1Logo" src="https://via.placeholder.com/120/0000ff/ffffff?text=SPONSOR2">
@@ -230,8 +228,8 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <input type="text" id="matchSponsor1LogoInput" placeholder="URL logo sponsor" style="width: 100%;">
 <button onclick="updateImage('matchSponsor1Logo', 'matchSponsor1LogoInput')">✓</button>
 </div>
-<h3 class="editable" contenteditable="false">Sponsor 2</h3>
-<p class="editable" contenteditable="false">Match Sponsor</p>
+<h3 class="editable" contenteditable="true">Sponsor 2</h3>
+<p class="editable" contenteditable="true">Match Sponsor</p>
 </div>
 </div>
 <div class="add-remove-btns">
@@ -249,21 +247,21 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#c8102e" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title editable" contenteditable="false">⏰ Prossima Partita</h2>
+<h2 class="section-title editable" contenteditable="true">⏰ Prossima Partita</h2>
 <div class="game-info">
 <div class="game-detail">
 <h3>📅 Data e Orario</h3>
-<p class="editable" contenteditable="false">Sabato 2 Novembre 2025</p>
-<p class="editable" contenteditable="false" style="margin-top: 5px;">ore 20:30</p>
+<p class="editable" contenteditable="true">Sabato 2 Novembre 2025</p>
+<p class="editable" contenteditable="true" style="margin-top: 5px;">ore 20:30</p>
 </div>
 <div class="game-detail">
 <h3>🏟️ Luogo</h3>
-<p class="editable" contenteditable="false">PalaBorsani<br>Castellanza</p>
+<p class="editable" contenteditable="true">PalaBorsani<br>Castellanza</p>
 </div>
 <div class="game-detail opponent-box">
 <h3>🆚 Avversario</h3>
 <img class="opponent-logo" id="opponentLogo" src="https://via.placeholder.com/50/0000ff/ffffff?text=OPP">
-<p class="editable" contenteditable="false">Virtus Bologna</p>
+<p class="editable" contenteditable="true">Virtus Bologna</p>
 </div>
 </div>
 <div class="image-input-container">
@@ -281,13 +279,13 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#ffffff" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title editable" contenteditable="false">🗓️ Programma Game Day</h2>
+<h2 class="section-title editable" contenteditable="true">🗓️ Programma Game Day</h2>
 <div class="program-timeline" id="programTimeline">
-<div class="program-item"><div class="program-time editable" contenteditable="false">18:00</div><div class="program-content"><h4 class="editable" contenteditable="false">🚪 Apertura Porte</h4><p class="editable" contenteditable="false">Inizio accoglienza pubblico</p></div></div>
-<div class="program-item"><div class="program-time editable" contenteditable="false">19:30</div><div class="program-content"><h4 class="editable" contenteditable="false">🏀 Riscaldamento</h4><p class="editable" contenteditable="false">Le squadre in campo</p></div></div>
-<div class="program-item"><div class="program-time editable" contenteditable="false">20:20</div><div class="program-content"><h4 class="editable" contenteditable="false">🎤 Presentazione</h4><p class="editable" contenteditable="false">Ingresso giocatori</p></div></div>
-<div class="program-item"><div class="program-time editable" contenteditable="false">20:30</div><div class="program-content"><h4 class="editable" contenteditable="false">🏁 Palla a Due</h4><p class="editable" contenteditable="false">Inizio partita!</p></div></div>
-<div class="program-item"><div class="program-time editable" contenteditable="false">21:15</div><div class="program-content"><h4 class="editable" contenteditable="false">🎭 Intervallo</h4><p class="editable" contenteditable="false">Show e intrattenimento</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="true">18:00</div><div class="program-content"><h4 class="editable" contenteditable="true">🚪 Apertura Porte</h4><p class="editable" contenteditable="true">Inizio accoglienza pubblico</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="true">19:30</div><div class="program-content"><h4 class="editable" contenteditable="true">🏀 Riscaldamento</h4><p class="editable" contenteditable="true">Le squadre in campo</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="true">20:20</div><div class="program-content"><h4 class="editable" contenteditable="true">🎤 Presentazione</h4><p class="editable" contenteditable="true">Ingresso giocatori</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="true">20:30</div><div class="program-content"><h4 class="editable" contenteditable="true">🏁 Palla a Due</h4><p class="editable" contenteditable="true">Inizio partita!</p></div></div>
+<div class="program-item"><div class="program-time editable" contenteditable="true">21:15</div><div class="program-content"><h4 class="editable" contenteditable="true">🎭 Intervallo</h4><p class="editable" contenteditable="true">Show e intrattenimento</p></div></div>
 </div>
 <div class="add-remove-btns">
 <button class="btn btn-add" onclick="addProgramItem()">➕ Aggiungi</button>
@@ -303,8 +301,8 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#ffd700" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title editable" contenteditable="false">💡 Curiosità della Partita</h2>
-<div class="curiosity-content editable" contenteditable="false">Questa sarà la terza volta che affrontiamo la Virtus Bologna! 🔥 La nostra squadra ha vinto l'ultimo incontro con un punteggio di 85-78 grazie a una performance straordinaria di Marco Rossi che ha segnato 28 punti!</div>
+<h2 class="section-title editable" contenteditable="true">💡 Curiosità della Partita</h2>
+<div class="curiosity-content editable" contenteditable="true">Questa sarà la terza volta che affrontiamo la Virtus Bologna! 🔥 La nostra squadra ha vinto l'ultimo incontro con un punteggio di 85-78 grazie a una performance straordinaria di Marco Rossi che ha segnato 28 punti!</div>
 </div>
 <div class="section">
 <div class="section-controls">
@@ -315,7 +313,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#c8102e" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title"><img id="knightsRosterLogo" src="https://via.placeholder.com/70/c8102e/ffffff?text=LBK"><span class="editable" contenteditable="false">👥 Roster Knights</span></h2>
+<h2 class="section-title"><img id="knightsRosterLogo" src="https://upload.wikimedia.org/wikipedia/it/c/c0/Legnano_Basket_Knights_Logo.png"><span class="editable" contenteditable="true">👥 Roster Knights</span></h2>
 <div class="image-input-container">
 <label>🖼️ Logo:</label>
 <input type="text" id="knightsRosterLogoInput" placeholder="URL">
@@ -329,12 +327,12 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <input type="text" id="knightsPlayer0ImgInput" placeholder="URL foto" style="width: 100%;">
 <button onclick="updateImage('knightsPlayer0Img', 'knightsPlayer0ImgInput')">✓</button>
 </div>
-<div class="player-name editable" contenteditable="false">Marco Rossi</div>
-<div class="player-details"><span class="editable" contenteditable="false">Guardia</span> | <span class="editable" contenteditable="false">192 cm</span> | <span class="editable" contenteditable="false">25 anni</span></div>
+<div class="player-name editable" contenteditable="true">Marco Rossi</div>
+<div class="player-details"><span class="editable" contenteditable="true">Guardia</span> | <span class="editable" contenteditable="true">192 cm</span> | <span class="editable" contenteditable="true">25 anni</span></div>
 </div>
 </div>
 </div>
-<div class="coach-card"><strong>🎯 Allenatore:</strong> <span class="editable" contenteditable="false">Coach Giovanni Neri</span></div>
+<div class="coach-card"><strong>🎯 Allenatore:</strong> <span class="editable" contenteditable="true">Coach Giovanni Neri</span></div>
 <div class="add-remove-btns">
 <button class="btn btn-add" onclick="addPlayer('knights')">➕ Aggiungi</button>
 <button class="btn" onclick="removePlayer('knights')">➖ Rimuovi</button>
@@ -350,7 +348,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#0000ff" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title"><img id="opponentRosterLogo" src="https://via.placeholder.com/70/0000ff/ffffff?text=OPP"><span class="editable" contenteditable="false">👥 Roster Avversari</span></h2>
+<h2 class="section-title"><img id="opponentRosterLogo" src="https://via.placeholder.com/70/0000ff/ffffff?text=OPP"><span class="editable" contenteditable="true">👥 Roster Avversari</span></h2>
 <div class="image-input-container">
 <label>🖼️ Logo:</label>
 <input type="text" id="opponentRosterLogoInput" placeholder="URL">
@@ -358,11 +356,11 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 </div>
 <div class="roster-container" id="opponentRoster">
 <div class="player-card-no-img">
-<div class="player-name editable" contenteditable="false">Paolo Neri</div>
-<div class="player-details"><span class="editable" contenteditable="false">Playmaker</span> | <span class="editable" contenteditable="false">185 cm</span> | <span class="editable" contenteditable="false">27 anni</span></div>
+<div class="player-name editable" contenteditable="true">Paolo Neri</div>
+<div class="player-details"><span class="editable" contenteditable="true">Playmaker</span> | <span class="editable" contenteditable="true">185 cm</span> | <span class="editable" contenteditable="true">27 anni</span></div>
 </div>
 </div>
-<div class="coach-card"><strong>🎯 Allenatore:</strong> <span class="editable" contenteditable="false">Coach Roberto Belli</span></div>
+<div class="coach-card"><strong>🎯 Allenatore:</strong> <span class="editable" contenteditable="true">Coach Roberto Belli</span></div>
 <div class="add-remove-btns">
 <button class="btn btn-add" onclick="addPlayer('opponent')">➕ Aggiungi</button>
 <button class="btn" onclick="removePlayer('opponent')">➖ Rimuovi</button>
@@ -378,7 +376,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#1a1a1a" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title"><img id="leagueLogo" src="https://via.placeholder.com/70/ffffff/000000?text=LEGA"><span class="editable" contenteditable="false">📊 Classifica</span></h2>
+<h2 class="section-title"><img id="leagueLogo" src="https://via.placeholder.com/70/ffffff/000000?text=LEGA"><span class="editable" contenteditable="true">📊 Classifica</span></h2>
 <div class="image-input-container">
 <label>🖼️ Logo:</label>
 <input type="text" id="leagueLogoInput" placeholder="URL">
@@ -392,17 +390,17 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <td>
 <div class="team-cell">
 <img class="team-logo" id="teamLogo0" src="https://via.placeholder.com/30/c8102e/ffffff?text=1">
-<span class="editable" contenteditable="false">Legnano Knights</span>
+<span class="editable" contenteditable="true">Legnano Knights</span>
 </div>
 <div class="image-input-container" style="display: block; margin-top: 5px;">
 <input type="text" id="teamLogo0Input" placeholder="URL logo" style="width: 100%;">
 <button onclick="updateImage('teamLogo0', 'teamLogo0Input')">✓</button>
 </div>
 </td>
-<td class="editable" contenteditable="false">10</td>
-<td class="editable" contenteditable="false">8</td>
-<td class="editable" contenteditable="false">2</td>
-<td class="editable" contenteditable="false">18</td>
+<td class="editable" contenteditable="true">10</td>
+<td class="editable" contenteditable="true">8</td>
+<td class="editable" contenteditable="true">2</td>
+<td class="editable" contenteditable="true">18</td>
 </tr>
 </tbody>
 </table>
@@ -420,8 +418,8 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#1DB954" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title editable" contenteditable="false">🎵 Playlist Pre-Partita</h2>
-<p class="editable" contenteditable="false">Ascolta la playlist ufficiale! 🔥</p>
+<h2 class="section-title editable" contenteditable="true">🎵 Playlist Pre-Partita</h2>
+<p class="editable" contenteditable="true">Ascolta la playlist ufficiale! 🔥</p>
 <a href="https://open.spotify.com/playlist/esempio" id="spotifyLink" class="spotify-link" target="_blank">🎧 Ascolta su Spotify</a>
 <div class="image-input-container">
 <label>🔗 Link Spotify:</label>
@@ -438,7 +436,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#c8102e" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title editable" contenteditable="false">🤝 I Nostri Sponsor</h2>
+<h2 class="section-title editable" contenteditable="true">🤝 I Nostri Sponsor</h2>
 <div class="sponsors-grid" id="sponsorsGrid">
 <div class="sponsor-card">
 <img class="sponsor-logo" id="sponsor0Logo" src="https://via.placeholder.com/100/c8102e/ffffff?text=LOGO1">
@@ -446,8 +444,8 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <input type="text" id="sponsor0LogoInput" placeholder="URL logo" style="width: 100%;">
 <button onclick="updateImage('sponsor0Logo', 'sponsor0LogoInput')">✓</button>
 </div>
-<h3 class="editable" contenteditable="false">Sponsor 1</h3>
-<p class="editable" contenteditable="false">Partner Principale</p>
+<h3 class="editable" contenteditable="true">Sponsor 1</h3>
+<p class="editable" contenteditable="true">Partner Principale</p>
 </div>
 </div>
 <div class="add-remove-btns">
@@ -464,7 +462,7 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 <label>🎨 Colore Sfondo:</label>
 <input type="color" value="#1a1a1a" onchange="changeSectionColor(this)">
 </div>
-<h2 class="section-title editable" contenteditable="false">🌐 Seguici sui Social</h2>
+<h2 class="section-title editable" contenteditable="true">🌐 Seguici sui Social</h2>
 <div class="social-links">
 <div class="social-item">
 <a href="https://instagram.com/legnanoknights" id="socialInstagram" class="social-btn social-instagram" target="_blank">📷 Instagram</a>
@@ -512,8 +510,8 @@ body { font-family: 'Arial', sans-serif; background: #0a0a0a; color: #ffffff; mi
 </div>
 </div>
 <div class="footer">
-<p><strong class="editable" contenteditable="false">Realizzato con ❤️ da Legnano Basket Knights</strong></p>
-<p class="editable" contenteditable="false">🏀 Vivi l'emozione del Game Day 🏀</p>
+<p><strong class="editable" contenteditable="true">Realizzato con ❤️ da Legnano Basket Knights</strong></p>
+<p class="editable" contenteditable="true">🏀 Vivi l'emozione del Game Day 🏀</p>
 </div>
 </div>
 <script>
@@ -823,5 +821,6 @@ window.onload = function() {
 initVisits();
 };
 </script>
-</body>
-</html>
+
+
+</body></html>
