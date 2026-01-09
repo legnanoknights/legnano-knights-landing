@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legnano Knights - Official Gameday</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --knights-red: #e30613;
@@ -13,6 +12,7 @@
             --facebook-blue: #1877F2;
             --linkedin-blue: #0077B5;
             --x-black: #000000;
+            --glass-bg: rgba(255, 255, 255, 0.05);
         }
 
         body {
@@ -23,6 +23,8 @@
             margin: 0; padding: 0; text-align: center;
         }
 
+        [contenteditable="true"] { border: 1px dashed var(--knights-red) !important; outline: none; background: rgba(227, 6, 19, 0.1); }
+
         header { padding: 30px 20px 10px; background: linear-gradient(to bottom, rgba(227, 6, 19, 0.2), transparent); }
         .main-logo { width: 100px; margin-bottom: 10px; filter: drop-shadow(0 0 15px var(--knights-red)); }
         h1 { font-size: 26px; margin: 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; }
@@ -32,137 +34,310 @@
         
         .section-header { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 25px 0 12px; }
         .section-title { font-size: 1.1em; text-transform: uppercase; letter-spacing: 2px; color: var(--knights-red); font-weight: 800; }
+        .team-mini-logo { width: 35px; height: 35px; object-fit: contain; background: rgba(255,255,255,0.1); border-radius: 4px; }
 
         .white-card { background: var(--knights-white); color: #111; border-radius: 12px; padding: 15px 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); border-bottom: 6px solid var(--knights-red); margin-bottom: 15px; text-align: left; }
-        .info-row { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.95em; display: flex; justify-content: space-between; align-items: center; }
-        .info-row:last-child { border-bottom: none; }
+        .info-row { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.95em; }
         .label { font-weight: 800; color: var(--knights-red); text-transform: uppercase; font-size: 0.7em; display: block; }
 
-        .curiosity-box { background: linear-gradient(135deg, var(--knights-red) 0%, #800000 100%); color: white; border-radius: 12px; padding: 15px 25px; font-style: italic; margin-bottom: 15px; text-align: center; font-size: 0.9em; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-
-        .player-pill { background: var(--knights-white); color: #000; margin: 8px 0; padding: 10px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; }
+        .roster-card { background: var(--glass-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; margin-bottom: 5px; }
+        .player-pill { background: var(--knights-white); color: #000; margin: 8px 0; padding: 10px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82em; }
         .player-name-side { display: flex; align-items: center; font-weight: 900; text-transform: uppercase; }
         .player-data-side { font-weight: 500; color: #555; font-size: 0.85em; }
         .number { background: var(--knights-red); color: white; padding: 2px 8px; border-radius: 4px; margin-right: 10px; min-width: 20px; text-align: center; }
 
-        table { width: 100%; border-collapse: collapse; background: white; color: black; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
-        th { background: #f4f4f4; padding: 10px; font-size: 0.7em; text-align: left; color: var(--knights-red); }
-        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.85em; text-align: left; }
+        table { width: 100%; border-collapse: collapse; background: white; color: black; border-radius: 12px; overflow: hidden; }
+        th { background: #f4f4f4; padding: 10px; font-size: 0.7em; }
+        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.85em; }
 
         .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .social-item { display: flex; flex-direction: column; }
         .s-btn { padding: 15px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; font-size: 0.75em; text-transform: uppercase; text-align: center; }
-        .inst { background: linear-gradient(45deg, #f09433, #bc1888); }
+        
+        .inst { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
         .face { background: var(--facebook-blue); }
         .x-com { background: var(--x-black); border: 1px solid #333; }
         .link { background: var(--linkedin-blue); }
+        .ytub { background: #FF0000; }
+        .spot { background: #1DB954; }
 
-        #status-bar { font-size: 9px; opacity: 0.4; margin-bottom: 10px; text-transform: uppercase; }
+        .img-url-input { display: none; margin: 5px auto; padding: 5px; font-size: 10px; width: 80%; border: 1px solid var(--knights-red); border-radius: 4px; }
+        .url-input { display: none; margin-bottom: 5px; padding: 5px; font-size: 10px; border: 1px solid var(--knights-red); border-radius: 4px; }
+        #admin-controls { position: fixed; bottom: 10px; right: 10px; z-index: 1000; display: flex; gap: 5px; flex-direction: column; }
+        .btn-admin { background: var(--knights-red); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .hidden-admin { display: none; }
+        .footer-logo { width: 120px; margin: 40px auto 10px; filter: drop-shadow(0 0 10px rgba(227,6,19,0.3)); }
+        .footer-text { margin-top: 10px; opacity: 0.3; font-size: 10px; padding-bottom: 80px; text-transform: uppercase; }
+        
+        .loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); padding: 20px 40px; border-radius: 10px; color: white; font-weight: bold; z-index: 9999; }
+        .save-indicator { position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; z-index: 9999; animation: fadeInOut 2s; }
+        @keyframes fadeInOut { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <div id="loading-indicator" class="loading" style="display:none;">Caricamento...</div>
+
     <header>
-        <img src="https://via.placeholder.com/150x150?text=KNIGHTS" id="logo-header" class="main-logo">
-        <h1>LEGNANO KNIGHTS</h1>
+        <input type="text" class="img-url-input" id="input-header-logo" placeholder="URL Logo Knights Principale">
+        <img src="https://via.placeholder.com/150x150?text=LOGO+KNIGHTS" id="header-logo" class="main-logo">
+        <h1 id="edit-main-title">LEGNANO KNIGHTS</h1>
         <div class="subtitle">GAMEDAY PROGRAM</div>
     </header>
 
     <div class="container">
-        <div id="status-bar">Sincronizzazione Live...</div>
-
+        
         <div class="section-header"><div class="section-title">📅 Programma</div></div>
-        <div id="container-programma" class="white-card"></div>
+        <div class="white-card" id="program-container">
+            <div class="info-row">18:00 - <strong>APERTURA CANCELLI</strong></div>
+            <div class="info-row" style="border:0; color:var(--knights-red)">19:00 - <strong>TIP-OFF</strong></div>
+        </div>
+        <button class="btn-admin hidden-admin" onclick="addItem('program-container', 'info')" style="width:100%">+ Aggiungi Voce Programma</button>
 
-        <div class="section-header"><div class="section-title">🏟️ Partita</div></div>
-        <div id="container-partita" class="white-card"></div>
+        <div class="section-header"><div class="section-title">🏟️ Prossima Partita</div></div>
+        <div class="white-card" id="match-container">
+            <div class="info-row"><span class="label">Luogo</span><strong>Soevis Arena, Legnano</strong></div>
+            <div class="info-row"><span class="label">Data e Ora</span><strong>08 Gennaio 2026 - Ore 19:00</strong></div>
+            <div class="info-row" style="border:0;"><span class="label">Avversari</span><strong>SQUADRA AVVERSARIA</strong></div>
+        </div>
+        <button class="btn-admin hidden-admin" onclick="addItem('match-container', 'info-label')" style="width:100%">+ Aggiungi Dettaglio Partita</button>
 
         <div class="section-header"><div class="section-title">💡 Curiosità</div></div>
-        <div id="container-curiosita" class="curiosity-box"></div>
+        <div class="white-card" style="background: linear-gradient(135deg, var(--knights-red) 0%, #800000 100%); color: white; border: none;">
+            <p id="edit-curiosity" style="margin: 0; font-style: italic; font-size: 0.9em;">"Sapevi che oggi celebriamo una giornata speciale? Forza Knights! 🏀"</p>
+        </div>
 
-        <div class="section-header"><div class="section-title">⚔️ Roster Knights</div></div>
-        <div id="container-roster"></div>
+        <div class="section-header">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <input type="text" class="img-url-input" id="input-logo-k" placeholder="URL Logo Knights">
+                <img src="https://via.placeholder.com/40?text=K" id="logo-k" class="team-mini-logo">
+            </div>
+            <div class="section-title">⚔️ Roster Knights</div>
+        </div>
+        <div class="roster-card" id="roster-knights">
+            <div class="player-pill">
+                <div class="player-name-side"><span class="number">4</span> NIK RAIVIO</div>
+                <div class="player-data-side">G | 188cm | 37 anni</div>
+            </div>
+        </div>
+        <button class="btn-admin hidden-admin" onclick="addItem('roster-knights', 'player')" style="width:100%">+ Aggiungi Giocatore</button>
+
+        <div class="section-header">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <input type="text" class="img-url-input" id="input-logo-a" placeholder="URL Logo Avversario">
+                <img src="https://via.placeholder.com/40?text=A" id="logo-a" class="team-mini-logo">
+            </div>
+            <div class="section-title">🏀 Roster Avversari</div>
+        </div>
+        <div class="roster-card" id="roster-opponents">
+            <div class="player-pill">
+                <div class="player-name-side"><span class="number">5</span> AVVERSARIO</div>
+                <div class="player-data-side">C | 205cm | 28 anni</div>
+            </div>
+        </div>
+        <button class="btn-admin hidden-admin" onclick="addItem('roster-opponents', 'player')" style="width:100%">+ Aggiungi Avversario</button>
 
         <div class="section-header"><div class="section-title">🏆 Classifica</div></div>
-        <table id="table-classifica">
-            <thead><tr><th>POS</th><th>SQUADRA</th><th>PT</th></tr></thead>
-            <tbody></tbody>
-        </table>
+        <div class="table-container">
+            <table id="edit-table">
+                <thead><tr><th>POS</th><th>SQUADRA</th><th>PT</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>LEGNANO KNIGHTS</td><td>24</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <button class="btn-admin hidden-admin" onclick="addItem('edit-table', 'table')" style="width:100%; margin-top:5px">+ Aggiungi Squadra</button>
 
         <div class="section-header"><div class="section-title">📱 Seguici sui nostri canali</div></div>
-        <div id="container-social" class="social-grid"></div>
-
-        <img src="https://via.placeholder.com/150x150?text=KNIGHTS" id="logo-footer" style="width:100px; margin-top:40px; opacity:0.6;">
-        <div style="font-size: 10px; opacity: 0.3; padding: 20px 0 100px;">
-            SOEVIS ARENA • KNIGHTS LANDING PAGE
+        <div class="social-grid" id="social-grid">
+            <div class="social-item"><input type="text" class="url-input" placeholder="URL Instagram" value="#"><a href="#" class="s-btn inst">Instagram</a></div>
+            <div class="social-item"><input type="text" class="url-input" placeholder="URL Facebook" value="#"><a href="#" class="s-btn face">Facebook</a></div>
+            <div class="social-item"><input type="text" class="url-input" placeholder="URL X" value="#"><a href="#" class="s-btn x-com">X (Twitter)</a></div>
+            <div class="social-item"><input type="text" class="url-input" placeholder="URL LinkedIn" value="#"><a href="#" class="s-btn link">LinkedIn</a></div>
+            <div class="social-item"><input type="text" class="url-input" placeholder="URL YouTube" value="#"><a href="#" class="s-btn ytub">YouTube</a></div>
+            <div class="social-item"><input type="text" class="url-input" placeholder="URL Spotify" value="#"><a href="#" class="s-btn spot">Spotify</a></div>
         </div>
+
+        <input type="text" class="img-url-input" id="input-footer-logo" placeholder="URL Logo Finale">
+        <img src="https://via.placeholder.com/150x150?text=LOGO+KNIGHTS" id="footer-logo-img" class="footer-logo">
+
+        <div class="footer-text">LEGNANO KNIGHTS BASKET • SOEVIS ARENA • KNIGHTS LANDING PAGE</div>
+    </div>
+
+    <div id="admin-controls">
+        <button class="btn-admin" id="btn-login" onclick="checkPsw()">MODALITÀ ADMIN</button>
+        <button class="btn-admin hidden-admin" id="btn-save" onclick="saveAll()" style="background:#28a745">💾 SALVA NEL CLOUD</button>
+        <button class="btn-admin hidden-admin" id="btn-close" onclick="closeAdmin()" style="background:#dc3545">❌ CHIUDI ADMIN</button>
     </div>
 
     <script>
-        // --- https://docs.google.com/spreadsheets/d/e/2PACX-1vQBU0Aws1giNhI6XWXogkA61v9unhit2bb58OhtTm5VXdYCvxUI73SP_lfcV5qXBa7T89ukZq8F7PR6/pub?output=csv ---
-        const CSV_URL = "INSERISCI_QUI_IL_TUO_LINK_CSV";
+        let isAdminMode = false;
 
-        async function updateLiveContent() {
+        // Carica i dati all'avvio
+        window.addEventListener('load', loadData);
+
+        async function loadData() {
+            showLoading(true);
             try {
-                const response = await fetch(CSV_URL);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1);
+                const result = await window.storage.get('knights-gameday-data');
+                if (result && result.value) {
+                    const data = JSON.parse(result.value);
+                    restoreData(data);
+                }
+            } catch (error) {
+                console.log('Nessun dato salvato trovato, uso i dati di default');
+            }
+            showLoading(false);
+        }
 
-                // Pulizia dei contenitori prima del caricamento
-                document.getElementById('container-programma').innerHTML = "";
-                document.getElementById('container-partita').innerHTML = "";
-                document.getElementById('container-roster').innerHTML = "";
-                document.getElementById('table-classifica').querySelector('tbody').innerHTML = "";
-                document.getElementById('container-social').innerHTML = "";
-
-                rows.forEach(row => {
-                    const cols = row.split(',').map(c => c.trim());
-                    if (cols.length < 3) return;
-
-                    const sezione = cols[0].toLowerCase();
-                    const chiave = cols[1];
-                    const valore = cols[2];
-                    const extra = cols[3] || "";
-
-                    if (sezione === "programma") {
-                        document.getElementById('container-programma').innerHTML += 
-                            `<div class="info-row"><span>${chiave}</span><strong>${valore}</strong></div>`;
-                    }
-                    else if (sezione === "partita") {
-                        document.getElementById('container-partita').innerHTML += 
-                            `<div class="info-row"><div><span class="label">${chiave}</span><strong>${valore}</strong></div></div>`;
-                    }
-                    else if (sezione === "curiosita") {
-                        document.getElementById('container-curiosita').innerText = valore;
-                    }
-                    else if (sezione === "roster") {
-                        document.getElementById('container-roster').innerHTML += 
-                            `<div class="player-pill">
-                                <div class="player-name-side"><span class="number">${chiave}</span>${valore}</div>
-                                <div class="player-data-side">${extra}</div>
-                            </div>`;
-                    }
-                    else if (sezione === "classifica") {
-                        const tbody = document.getElementById('table-classifica').querySelector('tbody');
-                        const r = tbody.insertRow();
-                        r.innerHTML = `<td>${chiave}</td><td>${valore}</td><td><strong>${extra}</strong></td>`;
-                    }
-                    else if (sezione === "social") {
-                        document.getElementById('container-social').innerHTML += 
-                            `<a href="${valore}" target="_blank" class="s-btn inst">${chiave}</a>`;
-                    }
-                    else if (sezione === "logo") {
-                        if (chiave.toLowerCase() === "header") document.getElementById('logo-header').src = valore;
-                        if (chiave.toLowerCase() === "footer") document.getElementById('logo-footer').src = valore;
+        function restoreData(data) {
+            // Ripristina i contenuti
+            if (data.mainTitle) document.getElementById('edit-main-title').textContent = data.mainTitle;
+            if (data.curiosity) document.getElementById('edit-curiosity').textContent = data.curiosity;
+            if (data.programContainer) document.getElementById('program-container').innerHTML = data.programContainer;
+            if (data.matchContainer) document.getElementById('match-container').innerHTML = data.matchContainer;
+            if (data.rosterKnights) document.getElementById('roster-knights').innerHTML = data.rosterKnights;
+            if (data.rosterOpponents) document.getElementById('roster-opponents').innerHTML = data.rosterOpponents;
+            if (data.tableBody) document.querySelector('#edit-table tbody').innerHTML = data.tableBody;
+            
+            // Ripristina le immagini
+            if (data.headerLogo) {
+                document.getElementById('header-logo').src = data.headerLogo;
+                document.getElementById('input-header-logo').value = data.headerLogo;
+            }
+            if (data.logoK) {
+                document.getElementById('logo-k').src = data.logoK;
+                document.getElementById('input-logo-k').value = data.logoK;
+            }
+            if (data.logoA) {
+                document.getElementById('logo-a').src = data.logoA;
+                document.getElementById('input-logo-a').value = data.logoA;
+            }
+            if (data.footerLogo) {
+                document.getElementById('footer-logo-img').src = data.footerLogo;
+                document.getElementById('input-footer-logo').value = data.footerLogo;
+            }
+            
+            // Ripristina i social
+            if (data.socialLinks) {
+                const socialItems = document.querySelectorAll('.social-item');
+                data.socialLinks.forEach((link, index) => {
+                    if (socialItems[index]) {
+                        socialItems[index].querySelector('.url-input').value = link;
+                        socialItems[index].querySelector('.s-btn').href = link;
                     }
                 });
-                document.getElementById('status-bar').innerText = "Live: Dati sincronizzati";
-            } catch (err) {
-                document.getElementById('status-bar').innerText = "Errore: Controlla il link Google Sheets";
             }
         }
 
-        updateLiveContent();
-        setInterval(updateLiveContent, 30000); // Aggiorna ogni 30 secondi
+        function showLoading(show) {
+            document.getElementById('loading-indicator').style.display = show ? 'block' : 'none';
+        }
+
+        function showSaveIndicator() {
+            const indicator = document.createElement('div');
+            indicator.className = 'save-indicator';
+            indicator.textContent = '✓ Salvato!';
+            document.body.appendChild(indicator);
+            setTimeout(() => indicator.remove(), 2000);
+        }
+
+        function checkPsw() {
+            const psw = prompt("Password Admin:");
+            if (psw === "knights2026") {
+                isAdminMode = true;
+                document.body.contentEditable = "true";
+                document.getElementById('btn-login').style.display = 'none';
+                document.querySelectorAll('.hidden-admin, .url-input, .img-url-input').forEach(el => el.style.display = 'block');
+                
+                // Aggiungi listener per gli input delle immagini
+                document.getElementById('input-header-logo').addEventListener('input', (e) => {
+                    document.getElementById('header-logo').src = e.target.value;
+                });
+                document.getElementById('input-logo-k').addEventListener('input', (e) => {
+                    document.getElementById('logo-k').src = e.target.value;
+                });
+                document.getElementById('input-logo-a').addEventListener('input', (e) => {
+                    document.getElementById('logo-a').src = e.target.value;
+                });
+                document.getElementById('input-footer-logo').addEventListener('input', (e) => {
+                    document.getElementById('footer-logo-img').src = e.target.value;
+                });
+                
+                alert("✅ Accesso Admin Attivo!\n\nOra puoi modificare tutto.\nQuando hai finito, clicca 'SALVA NEL CLOUD' per rendere le modifiche visibili a tutti!");
+            } else {
+                alert("❌ Password errata!");
+            }
+        }
+
+        async function saveAll() {
+            showLoading(true);
+            
+            // Raccogli tutti i dati
+            const data = {
+                mainTitle: document.getElementById('edit-main-title').textContent,
+                curiosity: document.getElementById('edit-curiosity').textContent,
+                programContainer: document.getElementById('program-container').innerHTML,
+                matchContainer: document.getElementById('match-container').innerHTML,
+                rosterKnights: document.getElementById('roster-knights').innerHTML,
+                rosterOpponents: document.getElementById('roster-opponents').innerHTML,
+                tableBody: document.querySelector('#edit-table tbody').innerHTML,
+                headerLogo: document.getElementById('header-logo').src,
+                logoK: document.getElementById('logo-k').src,
+                logoA: document.getElementById('logo-a').src,
+                footerLogo: document.getElementById('footer-logo-img').src,
+                socialLinks: Array.from(document.querySelectorAll('.social-item')).map(item => {
+                    const input = item.querySelector('.url-input');
+                    const link = item.querySelector('.s-btn');
+                    if (input.value !== "#") link.href = input.value;
+                    return input.value;
+                })
+            };
+            
+            try {
+                await window.storage.set('knights-gameday-data', JSON.stringify(data));
+                showLoading(false);
+                showSaveIndicator();
+                alert("✅ MODIFICHE SALVATE NEL CLOUD!\n\nOra tutti i tifosi che aprono la pagina vedranno le tue modifiche! 🏀");
+            } catch (error) {
+                showLoading(false);
+                alert("❌ Errore nel salvataggio. Riprova!");
+                console.error(error);
+            }
+        }
+
+        function closeAdmin() {
+            document.body.contentEditable = "false";
+            document.querySelectorAll('.hidden-admin, .url-input, .img-url-input').forEach(el => el.style.display = 'none');
+            document.getElementById('btn-login').style.display = 'block';
+            isAdminMode = false;
+        }
+
+        function addItem(containerId, type) {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            if (type === 'info') {
+                div.className = 'info-row';
+                div.innerHTML = '00:00 - <strong>NUOVA VOCE</strong>';
+                div.contentEditable = "true";
+                container.appendChild(div);
+            } else if (type === 'info-label') {
+                div.className = 'info-row';
+                div.innerHTML = '<span class="label">NUOVA ETICHETTA</span><strong>Dettaglio</strong>';
+                div.contentEditable = "true";
+                container.appendChild(div);
+            } else if (type === 'player') {
+                div.className = 'player-pill';
+                div.innerHTML = '<div class="player-name-side"><span class="number">0</span> NOME GIOCATORE</div><div class="player-data-side">R | 000cm | 00 anni</div>';
+                div.contentEditable = "true";
+                container.appendChild(div);
+            } else if (type === 'table') {
+                const table = container.getElementsByTagName('tbody')[0];
+                const row = table.insertRow();
+                row.innerHTML = "<td>0</td><td>NUOVA SQUADRA</td><td>0</td>";
+                row.contentEditable = "true";
+            }
+        }
     </script>
 </body>
 </html>
